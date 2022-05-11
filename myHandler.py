@@ -1,3 +1,4 @@
+from tracemalloc import start
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from pyowm import OWM
 from emoji import emojize
@@ -25,17 +26,25 @@ def helpme(bot, update):
     chat_id = update.message.chat_id
     bot.sendMessage(chat_id = chat_id, text = '이런 거 궁금하지 않아?\n1. 뭐하고 있을까?\n2. 애정표현 좋아할까?\n3. 여행 얘기나\n4. 자기 전 인사,\n5. 날씨가 궁금할 때!\n6. 보고 싶다던가\n7. 등등!')
 # dispatcher.add_handler(hello)
-dispatcher.add_handler(CommandHandler('start', hello))
+dispatcher.add_handler(CommandHandler('start', start))
 dispatcher.add_handler(CommandHandler('help', helpme))
 
 # All Reactions!
-def handler(bot, update):
+
+# Ver 12.0
+#def handler(bot, update):
+
+# Ver 13.0
+def handler(update, context):
     text = update.message.text
+    bot = context.bot
     chat_id = update.message.chat_id
 
     if '모해' in text:
+        #update.message.reply_text('니 생각ㅎㅎ')
         bot.send_message(chat_id = chat_id, text = '니 생각ㅎㅎ')
     elif '뭐해' in text:
+        #update.message.reply_text('니 생각ㅎㅎ')
         bot.send_message(chat_id = chat_id, text = '니 생각ㅎㅎ')
     elif '머해' in text:
         bot.send_message(chat_id = chat_id, text = '니 생각ㅎㅎ')
@@ -67,11 +76,11 @@ def handler(bot, update):
         else:
             comment = emojize('와서 나좀 안아줘:hatched_chick:', use_aliases = True)
         bot.send_message(chat_id = chat_id, text = '지금 ' + str(temp) + '도래! ' + comment)
-        
     else:
         #bot.send_message(chat_id = chat_id, text = '머라구??')
+        # Repeat the user's message
         bot.send_message(chat_id = chat_id, text = text)
 
-# add handler
+# Add handler
 echo_handler = MessageHandler(Filters.text, handler)
 dispatcher.add_handler(echo_handler)
